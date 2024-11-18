@@ -1,6 +1,8 @@
 let ironmanX = 2000;
 let ironmanY = 200;
 let s = 0.15;
+let velocity = -0.2;
+let acceleration = 1;
 let gameState = "start";
 let starX = [];
 let starY = [];
@@ -18,7 +20,6 @@ for (let i = 0; i < 300; i++) {
 
 function setup() {
   createCanvas(600, 500);
-  noStroke();
 }
 
 function ironman(x, y, s) {
@@ -280,6 +281,14 @@ function ironman(x, y, s) {
 }
 
 function startScreen() {
+  //Mouse pressed
+  if (mouseIsPressed) {
+    if (mouseX > 180 && mouseX <= 415 && mouseY >= 205 && mouseY <= 270) {
+      gameState = "game";
+    }
+  }
+
+  noStroke();
   background(255, 0, 0);
 
   //Red shadow
@@ -302,6 +311,19 @@ function startScreen() {
   fill(255, 255, 0);
   textSize(40);
   text("Start game", 200, 250);
+
+  //Game name
+  stroke(180, 0, 0);
+  strokeWeight(10);
+  textSize(80);
+  text("Stark´s Legacy", 30, 150);
+
+  //Instructions
+  stroke(0, 180, 180);
+  strokeWeight(4);
+  fill(0, 255, 255);
+  textSize(15);
+  text("Land Ironman safely using the spacebar", 230, 300, 150);
 }
 
 function gameScreen() {
@@ -319,6 +341,7 @@ function gameScreen() {
 }
 
 function winScreen() {
+  noStroke();
   background(0, 200, 200);
 
   //Text
@@ -326,31 +349,76 @@ function winScreen() {
   textSize(40);
   text("You won!", 215, 170);
 
-  //Background button
+  //Background play again button
   fill(0, 160, 160);
   rect(180, 205, 235, 65, 10);
 
-  //Text on button
+  //Background Menu button
+  rect(180, 300, 235, 65, 10);
+
+  //Text on play again button
   fill(255, 255, 0);
   textSize(30);
   text("Play again", 230, 250);
+
+  //Text on Menu button
+  textSize(30);
+  text("Menu", 260, 345);
+
+  //Mouse pressed restart win screen
+  if (gameState === "win" && mouseIsPressed) {
+    if (mouseX > 180 && mouseX <= 415 && mouseY >= 205 && mouseY <= 270) {
+      gameState = "game";
+    }
+  }
+
+  //Mouse pressed menu win screen
+  if (gameState === "win" && mouseIsPressed) {
+    if (mouseX > 180 && mouseX <= 415 && mouseY >= 300 && mouseY <= 365) {
+      gameState = "start";
+    }
+  }
 }
 
 function loseScreen() {
+  noStroke();
   background(200, 0, 0);
 
-  //Background button
+  //Background restart button
   fill(255, 255, 0);
   rect(180, 205, 235, 65, 10);
 
-  //Text on button
+  //Text lost
   fill(110, 0, 0);
   textSize(40);
   text("You lost, try again!", 145, 170);
 
-  //Text
+  //Text restart button
   textSize(30);
   text("Restart", 245, 250);
+
+  //Background Menu button
+  fill(255, 255, 0);
+  rect(180, 300, 235, 65, 10);
+
+  //Text on Menu button
+  fill(110, 0, 0);
+  textSize(30);
+  text("Menu", 260, 345);
+
+  //Mouse pressed restart lose screen
+  if (gameState === "lose" && mouseIsPressed) {
+    if (mouseX > 180 && mouseX <= 415 && mouseY >= 205 && mouseY <= 270) {
+      gameState = "game";
+    }
+  }
+
+  //Mouse pressed menu lose screen
+  if (gameState === "lose" && mouseIsPressed) {
+    if (mouseX > 180 && mouseX <= 415 && mouseY >= 300 && mouseY <= 365) {
+      gameState = "start";
+    }
+  }
 }
 
 function draw() {
@@ -358,17 +426,32 @@ function draw() {
     startScreen();
   } else if (gameState === "game") {
     gameScreen();
-  } else if (gameState === "result") {
+  } else if (gameState === "lose") {
     loseScreen();
-  } else if (gameState === "won") {
+  } else if (gameState === "win") {
     winScreen();
   }
 
-  //Mouse pressed
+  if (gameState === "game") {
+    acceleration += 0.01;
+    if (keyIsDown(32)) {
+      velocity -= 3;
+    }
 
-  if (mouseIsPressed) {
-    if (mouseX > 180 && mouseX <= 415 && mouseY >= 205 && mouseY <= 270) {
-      gameState = "game";
+    ironmanY += velocity;
+    velocity += acceleration;
+    if (ironmanY > 2200) {
+      if (velocity > 13) {
+        gameState = "lose";
+        ironmanY = 80;
+        velocity = 0.2;
+        acceleration = 1;
+      } else if (velocity < 13) {
+        gameState = "win";
+        ironmanY = 80;
+        velocity = 0.2;
+        acceleration = 1;
+      }
     }
   }
 }
