@@ -7,7 +7,7 @@ let ironmanY = 200;
 let s = 0.15;
 let velocity = 0.1;
 let acceleration = 1;
-let gameState = "game";
+let gameState = "start";
 let starX = [];
 let starY = [];
 let starAlpha = [];
@@ -280,9 +280,14 @@ function ironman(x, y, s) {
   rect((x + 170) * s, (y + 305) * s, 10 * s, 350 * s, 5 * s);
 }
 
+function resetValues() {
+  ironmanY = 200;
+  velocity = 0.1;
+}
+
 function startScreen() {
   //Mouse pressed
-  if (mouseIsPressed) {
+  if (gameState === "start" && mouseIsPressed) {
     if (mouseX > 180 && mouseX <= 415 && mouseY >= 205 && mouseY <= 270) {
       gameState = "game";
     }
@@ -327,14 +332,16 @@ function startScreen() {
 }
 
 function gameScreen() {
-  background(50, 50, 50);
-
   //Stars
+  push();
+  noStroke();
+  background(50, 50, 50);
   for (let index in starX) {
     fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
     ellipse(starX[index], starY[index], 3);
     starAlpha[index] = starAlpha[index] + 0.025;
   }
+  pop();
 
   //Platform
   fill(20, 20, 20);
@@ -433,8 +440,10 @@ function draw() {
     gameScreen();
   } else if (gameState === "lose") {
     loseScreen();
+    resetValues();
   } else if (gameState === "win") {
     winScreen();
+    resetValues();
   }
 
   if (gameState === "game") {
@@ -443,7 +452,7 @@ function draw() {
       velocity -= 3;
     }
 
-    ironmanY = ironmanY + velocity;
+    ironmanY += velocity;
     ironmanY += velocity;
     velocity += acceleration;
     if (ironmanY > 2200) {
