@@ -1,5 +1,15 @@
 function setup() {
   createCanvas(600, 500);
+
+  for (let i = 0; i < 300; i++) {
+    const x = Math.floor(Math.random() * width);
+    const y = Math.floor(Math.random() * height);
+    const alpha = Math.random();
+
+    starX.push(x);
+    starY.push(y);
+    starAlpha.push(alpha);
+  }
 }
 
 let ironmanX = 2000;
@@ -11,16 +21,6 @@ let gameState = "start";
 let starX = [];
 let starY = [];
 let starAlpha = [];
-
-for (let i = 0; i < 300; i++) {
-  const x = Math.floor(Math.random() * width);
-  const y = Math.floor(Math.random() * height);
-  const alpha = Math.random();
-
-  starX.push(x);
-  starY.push(y);
-  starAlpha.push(alpha);
-}
 
 function ironman(x, y, s) {
   //Head
