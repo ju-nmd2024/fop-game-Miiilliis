@@ -1,9 +1,13 @@
+function setup() {
+  createCanvas(600, 500);
+}
+
 let ironmanX = 2000;
 let ironmanY = 200;
 let s = 0.15;
-let velocity = -0.2;
+let velocity = 0.1;
 let acceleration = 1;
-let gameState = "start";
+let gameState = "game";
 let starX = [];
 let starY = [];
 let starAlpha = [];
@@ -16,10 +20,6 @@ for (let i = 0; i < 300; i++) {
   starX.push(x);
   starY.push(y);
   starAlpha.push(alpha);
-}
-
-function setup() {
-  createCanvas(600, 500);
 }
 
 function ironman(x, y, s) {
@@ -329,14 +329,18 @@ function startScreen() {
 function gameScreen() {
   background(50, 50, 50);
 
+  //Stars
   for (let index in starX) {
     fill(255, 255, 255, Math.abs(Math.sin(starAlpha[index])) * 255);
     ellipse(starX[index], starY[index], 3);
     starAlpha[index] = starAlpha[index] + 0.025;
   }
 
+  //Platform
   fill(20, 20, 20);
   rect(0, 400, 700, 200);
+
+  //Character
   ironman(ironmanX, ironmanY, s);
 }
 
@@ -351,30 +355,30 @@ function winScreen() {
 
   //Background play again button
   fill(0, 160, 160);
-  rect(180, 205, 235, 65, 10);
+  rect(20, 320, 235, 65, 10);
 
   //Background Menu button
-  rect(180, 300, 235, 65, 10);
+  rect(20, 400, 235, 65, 10);
 
   //Text on play again button
   fill(255, 255, 0);
   textSize(30);
-  text("Play again", 230, 250);
+  text("Play again", 65, 360);
 
   //Text on Menu button
   textSize(30);
-  text("Menu", 260, 345);
+  text("Menu", 95, 440);
 
   //Mouse pressed restart win screen
   if (gameState === "win" && mouseIsPressed) {
-    if (mouseX > 180 && mouseX <= 415 && mouseY >= 205 && mouseY <= 270) {
+    if (mouseX > 20 && mouseX <= 255 && mouseY >= 320 && mouseY <= 385) {
       gameState = "game";
     }
   }
 
   //Mouse pressed menu win screen
   if (gameState === "win" && mouseIsPressed) {
-    if (mouseX > 180 && mouseX <= 415 && mouseY >= 300 && mouseY <= 365) {
+    if (mouseX > 20 && mouseX <= 255 && mouseY >= 400 && mouseY <= 465) {
       gameState = "start";
     }
   }
@@ -386,7 +390,7 @@ function loseScreen() {
 
   //Background restart button
   fill(255, 255, 0);
-  rect(180, 205, 235, 65, 10);
+  rect(350, 320, 235, 65, 10);
 
   //Text lost
   fill(110, 0, 0);
@@ -395,33 +399,34 @@ function loseScreen() {
 
   //Text restart button
   textSize(30);
-  text("Restart", 245, 250);
+  text("Restart", 420, 360);
 
   //Background Menu button
   fill(255, 255, 0);
-  rect(180, 300, 235, 65, 10);
+  rect(350, 400, 235, 65, 10);
 
   //Text on Menu button
   fill(110, 0, 0);
   textSize(30);
-  text("Menu", 260, 345);
+  text("Menu", 430, 445);
 
   //Mouse pressed restart lose screen
   if (gameState === "lose" && mouseIsPressed) {
-    if (mouseX > 180 && mouseX <= 415 && mouseY >= 205 && mouseY <= 270) {
+    if (mouseX > 350 && mouseX <= 585 && mouseY >= 320 && mouseY <= 385) {
       gameState = "game";
     }
   }
 
   //Mouse pressed menu lose screen
   if (gameState === "lose" && mouseIsPressed) {
-    if (mouseX > 180 && mouseX <= 415 && mouseY >= 300 && mouseY <= 365) {
+    if (mouseX > 350 && mouseX <= 585 && mouseY >= 400 && mouseY <= 465) {
       gameState = "start";
     }
   }
 }
 
 function draw() {
+  //Game mechanics
   if (gameState === "start") {
     startScreen();
   } else if (gameState === "game") {
@@ -438,18 +443,19 @@ function draw() {
       velocity -= 3;
     }
 
+    ironmanY = ironmanY + velocity;
     ironmanY += velocity;
     velocity += acceleration;
     if (ironmanY > 2200) {
-      if (velocity > 13) {
+      if (velocity > 10) {
         gameState = "lose";
-        ironmanY = 80;
-        velocity = 0.2;
+
+        velocity = 0.1;
         acceleration = 1;
-      } else if (velocity < 13) {
+      } else if (velocity < 10) {
         gameState = "win";
-        ironmanY = 80;
-        velocity = 0.2;
+
+        velocity = 0.1;
         acceleration = 1;
       }
     }
